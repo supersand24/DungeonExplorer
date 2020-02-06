@@ -10,11 +10,12 @@ public class GameManager : MonoBehaviour {
 
 	private void BeginGame() {
 		mapInstance = Instantiate(mapPrefab) as Map;
-		//StartCoroutine(mapInstance.Generate());
+		mapInstance.name = "Map";
 		mapInstance.Generate();
 	}
 
 	private void NewMap() {
+		Debug.Log("------------------------");
 		StopAllCoroutines();
 		Destroy(mapInstance.gameObject);
 		BeginGame();
@@ -32,4 +33,5 @@ public class GameManager : MonoBehaviour {
 			NewMap();
 		}
     }
+
 }

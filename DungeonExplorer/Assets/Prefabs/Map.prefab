@@ -44,10 +44,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 10, y: 10}
+  mapBorder: 0
+  generationDelay: 1
+  wallRemovalPercent: 35
   cellPrefab: {fileID: 128709786246601598, guid: a4a8e0e8c0dd28840afc3dd20326968c,
     type: 3}
   passagePrefab: {fileID: 7465854800054433584, guid: b8d819014712b9742bb6d6ac20d92e4d,
     type: 3}
   wallPrefab: {fileID: 4309138261389878389, guid: d1c21fc86a21d7e429870800141d6342,
     type: 3}
-  generationDelta: 0.01
