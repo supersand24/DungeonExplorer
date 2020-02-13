@@ -13,7 +13,6 @@ public class Map : MonoBehaviour {
 	public MapPassage passagePrefab;
 	public MapWall wallPrefab;
 	public MapBorder borderPrefab;
-	public Vector2 mapPixels;
 
 	private MapCell[,] cells; //the map
 	private List<MapCellEdge> walls = new List<MapCellEdge>();
@@ -91,8 +90,7 @@ public class Map : MonoBehaviour {
 			MapBorder border = Instantiate(borderPrefab) as MapBorder;
 			border.name = "MapBorder " + direction;
 			border.transform.parent = transform;
-			mapPixels = new Vector2(10, 10); //TEMP
-			border.Initialize(direction, mapPixels);
+			border.Initialize(direction, new Vector2(size.x, size.y));
 		}
 	}
 
