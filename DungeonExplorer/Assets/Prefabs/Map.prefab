@@ -53,3 +53,7 @@ MonoBehaviour:
     type: 3}
   wallPrefab: {fileID: 4309138261389878389, guid: d1c21fc86a21d7e429870800141d6342,
     type: 3}
+  borderPrefab: {fileID: 2766653799556311601, guid: 26d8afab513baa441aeb805d6670eb9b,
+    type: 3}
+  width: 0
+  height: 0

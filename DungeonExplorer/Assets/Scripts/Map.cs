@@ -12,12 +12,20 @@ public class Map : MonoBehaviour {
 	public MapCell cellPrefab;
 	public MapPassage passagePrefab;
 	public MapWall wallPrefab;
+	public MapBorder borderPrefab;
+	public Vector2 mapPixels;
 
 	private MapCell[,] cells; //the map
 	private List<MapCellEdge> walls = new List<MapCellEdge>();
 	private int cellCount;
 	private WaitForSeconds generationDelta;
-	Coroutine mapGen;
+	private Coroutine mapGen;
+	private Vector2Int startCoords;
+
+	//returns the coords of the initial cell
+	public Vector2Int GetStartCoords() {
+		return startCoords;
+	}
 
 	//Returns random coords within the map's coord limits
 	public Vector2Int RandomCoordinates {
@@ -76,13 +84,25 @@ public class Map : MonoBehaviour {
 		}
 	}
 
+	//Creates the borders
+	private void CreateBorders(){
+		MapDirection[] directions = { (MapDirection)0, (MapDirection)1, (MapDirection)2, (MapDirection)3 };
+		foreach (MapDirection direction in directions) {
+			MapBorder border = Instantiate(borderPrefab) as MapBorder;
+			border.name = "MapBorder " + direction;
+			border.transform.parent = transform;
+			mapPixels = new Vector2(10, 10); //TEMP
+			border.Initialize(direction, mapPixels);
+		}
+	}
+
 	//Begins and controls the generation process
 	public void Generate() {
 		Debug.Log("Starting map generation of " + (size.x * size.y) + " cells.");
 		cells = new MapCell[size.x, size.y];
 		generationDelta = new WaitForSeconds(generationDelay);
 		MapCell startCell = CreateCell(new Vector2Int(RandomCoordinates.x, RandomCoordinates.y));
-
+		startCoords = startCell.coords;
 		if (generationDelay > 0) {
 			mapGen = StartCoroutine(GeneratePassagesFrom(startCell, cells, mapBorder, generationDelta));
 		} else {
@@ -93,16 +113,17 @@ public class Map : MonoBehaviour {
 			Debug.Log("Finished map generation.");
 			RemoveRandomWalls(cells, wallRemovalPercent);
 		}
+		CreateBorders();
 	}
 
-	//Recursive-backtracing maze algorithm implementation COROUTINE
+	//Recursive-backtracing maze algorithm implementation COROUTINE {NOT WORKING}
 	private IEnumerator GeneratePassagesFrom(MapCell currentCell, MapCell[,] cells, bool mapBorder, WaitForSeconds generationDelta) {
 		MapDirection[] directions = { (MapDirection)0, (MapDirection)1, (MapDirection)2, (MapDirection)3 };
 		Shuffle.ShuffleList(directions);
 
 		if(cellCount < (size.x * size.y)){
 			foreach (MapDirection direction in directions) {
-				Vector2Int nextCellCoords = currentCell.coords + MapDirections.vectors[(int)direction];
+				Vector2Int nextCellCoords = currentCell.coords + direction.ToVector2Int();
 				if (ContainsCoordinates(nextCellCoords)) { //Creates wall in direction if next cell's coords are outside the map
 					if (cells[nextCellCoords.x, nextCellCoords.y] == null) { //Either recurses in next cell or creates a wall in direction if there is already a cell there
 						cells[nextCellCoords.x, nextCellCoords.y] = CreateCell(nextCellCoords);
@@ -130,7 +151,7 @@ public class Map : MonoBehaviour {
 		Shuffle.ShuffleList(directions);
 
 		foreach (MapDirection direction in directions) {
-			Vector2Int nextCellCoords = currentCell.coords + MapDirections.vectors[(int)direction];
+			Vector2Int nextCellCoords = currentCell.coords + direction.ToVector2Int();
 			if (ContainsCoordinates(nextCellCoords)) { //Creates wall in direction if next cell's coords are outside the map
 				if (cells[nextCellCoords.x, nextCellCoords.y] == null) { //Either recurses in next cell or creates a wall in direction if there is already a cell there
 					cells[nextCellCoords.x, nextCellCoords.y] = CreateCell(nextCellCoords);
