@@ -44,7 +44,6 @@ public class MapBorder : MonoBehaviour {
 	public void Initialize(MapDirection direction, Vector2 mapSize) {
 		this.direction = direction;
 		this.mapSize = mapSize;
-		this.tag = "MapBorder";
 		transform.localPosition = Vector2.zero;
 		transform.localRotation = direction.ToRotation();
 	}

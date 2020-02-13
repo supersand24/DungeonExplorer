@@ -43,10 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae501e490a63b1a4ba39c63338105232, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 10, y: 10}
-  mapBorder: 0
-  generationDelay: 1
-  wallRemovalPercent: 35
   cellPrefab: {fileID: 128709786246601598, guid: a4a8e0e8c0dd28840afc3dd20326968c,
     type: 3}
   passagePrefab: {fileID: 7465854800054433584, guid: b8d819014712b9742bb6d6ac20d92e4d,
@@ -55,3 +51,9 @@ MonoBehaviour:
     type: 3}
   borderPrefab: {fileID: 2766653799556311601, guid: 26d8afab513baa441aeb805d6670eb9b,
     type: 3}
+  scoreOrbPrefab: {fileID: 461729986281102198, guid: 3f973291bc04e5d46ab3ecba5368fa8c,
+    type: 3}
+  size: {x: 10, y: 10}
+  mapBorder: 0
+  wallRemovalPercent: 35
+  score: 0

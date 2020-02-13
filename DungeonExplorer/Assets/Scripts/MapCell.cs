@@ -27,20 +27,4 @@ public class MapCell : MonoBehaviour {
 		initializedEdgeCount += 1;
 	}
 
-	//returns a random direction on this cell that doesnt have an edge
-	public MapDirection RandomUninitializedDirection {
-		get {
-			int skips = Random.Range(0, MapDirections.Count - initializedEdgeCount);
-			for (int i=0; i<MapDirections.Count; i++) {
-				if (edges[i] == null) {
-					if (skips == 0) {
-						return (MapDirection)i;
-					}
-					skips -= 1;
-				}
-			}
-			throw new System.InvalidOperationException("MapCell has no uninitialized directions left");
-		}
-	}
-
 }

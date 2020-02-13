@@ -6,6 +6,8 @@ MonoImporter:
   defaultReferences:
   - mapPrefab: {fileID: 4983725352697629514, guid: 4fcd9b401dddcc7439f764aa2a043041,
       type: 3}
+  - playerPrefab: {fileID: 114692112338565066, guid: c0f652728ebc2eb4f8a00ea494d3a508,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

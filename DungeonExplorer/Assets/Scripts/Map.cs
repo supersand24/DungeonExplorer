@@ -5,21 +5,26 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
-	public Vector2Int size; //map size
-	public bool mapBorder; //true=generate walls around map
-	public float generationDelay; //time between direction checks in seconds
-	public int wallRemovalPercent; //the number of walls to remove after generation the mazes
 	public MapCell cellPrefab;
 	public MapPassage passagePrefab;
 	public MapWall wallPrefab;
 	public MapBorder borderPrefab;
+	public ScoreOrb scoreOrbPrefab;
+
+	public Vector2Int size; //map size
+	public bool mapBorder; //true=generate walls around map
+	public int wallRemovalPercent; //the number of walls to remove after generation the mazes
+	public int score;
 
 	private MapCell[,] cells; //the map
 	private List<MapCellEdge> walls = new List<MapCellEdge>();
 	private int cellCount;
-	private WaitForSeconds generationDelta;
-	private Coroutine mapGen;
 	private Vector2Int startCoords;
+
+	//increases the score by one
+	public void IncScore() {
+		this.score++;
+	}
 
 	//returns the coords of the initial cell
 	public Vector2Int GetStartCoords() {
@@ -83,6 +88,13 @@ public class Map : MonoBehaviour {
 		}
 	}
 
+	private void CreateScoreOrb(MapCell cell) {
+		ScoreOrb orb = Instantiate(scoreOrbPrefab) as ScoreOrb;
+		orb.transform.parent = cell.transform;
+		orb.name = "ScoreOrb";
+		orb.transform.localPosition = Vector2.zero;
+	}
+
 	//Creates the borders
 	private void CreateBorders(){
 		MapDirection[] directions = { (MapDirection)0, (MapDirection)1, (MapDirection)2, (MapDirection)3 };
@@ -98,52 +110,18 @@ public class Map : MonoBehaviour {
 	public void Generate() {
 		Debug.Log("Starting map generation of " + (size.x * size.y) + " cells.");
 		cells = new MapCell[size.x, size.y];
-		generationDelta = new WaitForSeconds(generationDelay);
 		MapCell startCell = CreateCell(new Vector2Int(RandomCoordinates.x, RandomCoordinates.y));
+		CreateScoreOrb(startCell);
 		startCoords = startCell.coords;
-		if (generationDelay > 0) {
-			mapGen = StartCoroutine(GeneratePassagesFrom(startCell, cells, mapBorder, generationDelta));
-		} else {
-			GeneratePassagesFrom(startCell, cells, mapBorder);
-		}
+		GeneratePassagesFrom(startCell, cells, mapBorder);
 		if (cellCount >= (size.x * size.y)) {
-			if (generationDelay > 0) { StopCoroutine(mapGen); }
 			Debug.Log("Finished map generation.");
 			RemoveRandomWalls(cells, wallRemovalPercent);
 		}
 		CreateBorders();
 	}
 
-	//Recursive-backtracing maze algorithm implementation COROUTINE {NOT WORKING}
-	private IEnumerator GeneratePassagesFrom(MapCell currentCell, MapCell[,] cells, bool mapBorder, WaitForSeconds generationDelta) {
-		MapDirection[] directions = { (MapDirection)0, (MapDirection)1, (MapDirection)2, (MapDirection)3 };
-		Shuffle.ShuffleList(directions);
-
-		if(cellCount < (size.x * size.y)){
-			foreach (MapDirection direction in directions) {
-				Vector2Int nextCellCoords = currentCell.coords + direction.ToVector2Int();
-				if (ContainsCoordinates(nextCellCoords)) { //Creates wall in direction if next cell's coords are outside the map
-					if (cells[nextCellCoords.x, nextCellCoords.y] == null) { //Either recurses in next cell or creates a wall in direction if there is already a cell there
-						cells[nextCellCoords.x, nextCellCoords.y] = CreateCell(nextCellCoords);
-						CreatePassage(currentCell, cells[nextCellCoords.x, nextCellCoords.y], direction);
-						//yield return generationDelay; //makes it really linear
-						StartCoroutine(GeneratePassagesFrom(cells[nextCellCoords.x, nextCellCoords.y], cells, mapBorder, generationDelta));
-					} else { //Sometimes getting duplicates
-						if (currentCell.GetEdge(direction) == null) {
-							CreateWall(currentCell, cells[nextCellCoords.x, nextCellCoords.y], direction);
-						}
-					}
-				} else {
-					if (mapBorder) {
-						CreateWall(currentCell, null, direction);
-					}
-				}
-			}
-		}
-		yield return generationDelay;
-	}
-
-	//Recursive-backtracing maze algorithm implementation ONE-GO
+	//Recursive-backtracing maze algorithm implementation
 	private void GeneratePassagesFrom(MapCell currentCell, MapCell[,] cells, bool mapBorder) {
 		MapDirection[] directions = { (MapDirection)0, (MapDirection)1, (MapDirection)2, (MapDirection)3 };
 		Shuffle.ShuffleList(directions);
@@ -153,6 +131,7 @@ public class Map : MonoBehaviour {
 			if (ContainsCoordinates(nextCellCoords)) { //Creates wall in direction if next cell's coords are outside the map
 				if (cells[nextCellCoords.x, nextCellCoords.y] == null) { //Either recurses in next cell or creates a wall in direction if there is already a cell there
 					cells[nextCellCoords.x, nextCellCoords.y] = CreateCell(nextCellCoords);
+					CreateScoreOrb(cells[nextCellCoords.x, nextCellCoords.y]);
 					CreatePassage(currentCell, cells[nextCellCoords.x, nextCellCoords.y], direction);
 					GeneratePassagesFrom(cells[nextCellCoords.x, nextCellCoords.y], cells, mapBorder);
 				} else { //Sometimes getting duplicates
@@ -169,7 +148,7 @@ public class Map : MonoBehaviour {
 	}
 
 	//Removes random walls as a given percentage of total walls
-	public void RemoveRandomWalls(MapCell[,] cells, int wallRemovalPercentage) {
+	private void RemoveRandomWalls(MapCell[,] cells, int wallRemovalPercentage) {
 		int wallsToRemove = (int)((wallRemovalPercentage / 100.0) * walls.Count);
 		Debug.Log("Removing " + wallsToRemove + " walls.");
 		for (int i=0; i<wallsToRemove; i++) {

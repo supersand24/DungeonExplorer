@@ -5,26 +5,26 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
 	public Map mapPrefab;
-	//public PlayerController playerPrefab;
+	public PlayerController playerPrefab;
 
 	private Map mapInstance;
-	//private PlayerController playerInstance;
+	private PlayerController playerInstance;
 
 	private void BeginGame() {
 		Physics2D.gravity = Vector2.zero;
 		mapInstance = Instantiate(mapPrefab) as Map;
 		mapInstance.name = "Map";
 		mapInstance.Generate();
-		//playerInstance = Instantiate(playerPrefab) as PlayerController;
-		//playerInstance.name = "Player";
-		//playerInstance.Generate(mapInstance.GetStartCoords().x / 2, mapInstance.GetStartCoords().y / 2);
+		playerInstance = Instantiate(playerPrefab) as PlayerController;
+		playerInstance.name = "Player";
+		playerInstance.Generate(mapInstance.GetStartCoords().x / 2, mapInstance.GetStartCoords().y / 2);
 	}
 
 	private void NewMap() {
 		Debug.Log("------------------------");
 		StopAllCoroutines();
 		Destroy(mapInstance.gameObject);
-		//Destroy(playerInstance.gameObject);
+		Destroy(playerInstance.gameObject);
 		BeginGame();
 	}
 
@@ -39,7 +39,10 @@ public class GameManager : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.R)) {
 			NewMap();
 		}
-		//playerInstance.transform.position += new Vector3(Input.GetAxis("Horizontal") * playerInstance.speed * Time.deltaTime, Input.GetAxis("Vertical") * playerInstance.speed * Time.deltaTime, 0);
+		playerInstance.transform.position += new Vector3(Input.GetAxis("Horizontal") * playerInstance.speed * Time.deltaTime, Input.GetAxis("Vertical") * playerInstance.speed * Time.deltaTime, 0);
+		if (mapInstance.score >= 100) {
+			NewMap();
+		}
 	}
 
 }
