@@ -6,9 +6,9 @@ using UnityEngine;
 public class MapBorder : MonoBehaviour {
 
 	private GameObject thePlayer;
-	private Vector2 mapSize;
+	private int mapSize;
 	private MapDirection direction;
-	private float teleportExtra = 0.55f;
+	private float teleportExtra;
 
 	//Teleports the player if they collide with the border to the opposite side with an offset multiplied by the mapsize normalized to 10
 	private void OnTriggerEnter2D(Collider2D collision) {
@@ -19,20 +19,20 @@ public class MapBorder : MonoBehaviour {
 		}
 		switch (direction) {
 			case ((MapDirection) 0): //North
-				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x, thePlayer.transform.position.y - 10*(mapSize.y/10) + teleportExtra*(mapSize.y/10));
-				Debug.Log("Teleporting from North Border to South Border");
+				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x, thePlayer.transform.position.y*-1 + teleportExtra);
+				//Debug.Log("Teleporting from North Border to South Border");
 				break;
 			case ((MapDirection) 1): //East
-				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x - 10*(mapSize.x/10) + teleportExtra*(mapSize.x/10), thePlayer.transform.position.y);
-				Debug.Log("Teleporting from East Border to West Border");
+				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x*-1 + teleportExtra, thePlayer.transform.position.y);
+				//Debug.Log("Teleporting from East Border to West Border");
 				break;
 			case ((MapDirection) 2): //South
-				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x, thePlayer.transform.position.y + 10*(mapSize.y/10) - teleportExtra*(mapSize.y/10));
-				Debug.Log("Teleporting from South Border to North Border");
+				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x, thePlayer.transform.position.y*-1 - teleportExtra);
+				//Debug.Log("Teleporting from South Border to North Border");
 				break;
 			case ((MapDirection) 3): //West
-				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x + 10*(mapSize.x/10) - teleportExtra*(mapSize.x/10), thePlayer.transform.position.y);
-				Debug.Log("Teleporting from West Border to East Border");
+				thePlayer.transform.position = new Vector2(thePlayer.transform.position.x*-1 - teleportExtra, thePlayer.transform.position.y);
+				//Debug.Log("Teleporting from West Border to East Border");
 				break;
 			default:
 				Debug.Log("Map Border does not have a designated direction");
@@ -41,11 +41,14 @@ public class MapBorder : MonoBehaviour {
 
 	}
 
-	public void Initialize(MapDirection direction, Vector2 mapSize) {
+	public void Initialize(MapDirection direction, int mapSize) {
 		this.direction = direction;
 		this.mapSize = mapSize;
-		transform.localPosition = Vector2.zero;
-		transform.localRotation = direction.ToRotation();
+		this.transform.localPosition = Vector2.zero;
+		this.transform.localRotation = direction.ToRotation();
+		this.GetComponent<BoxCollider2D>().size = new Vector3(mapSize, 1, 1);
+		this.GetComponent<BoxCollider2D>().offset = new Vector2(0, mapSize/2 + 0.5f);
+		this.teleportExtra = (mapSize/10) * 0.05f;
 	}
 
 }

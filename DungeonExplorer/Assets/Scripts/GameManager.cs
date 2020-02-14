@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 		playerInstance = Instantiate(playerPrefab) as PlayerController;
 		playerInstance.name = "Player";
 		playerInstance.Generate(mapInstance.GetStartCoords().x / 2, mapInstance.GetStartCoords().y / 2);
+		Camera.main.orthographicSize = (5 * (mapInstance.size/10f));
 	}
 
 	private void NewMap() {
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour {
 			NewMap();
 		}
 		playerInstance.transform.position += new Vector3(Input.GetAxis("Horizontal") * playerInstance.speed * Time.deltaTime, Input.GetAxis("Vertical") * playerInstance.speed * Time.deltaTime, 0);
-		if (mapInstance.score >= 100) {
+		if (mapInstance.score >= (mapInstance.size * mapInstance.size)) {
 			NewMap();
 		}
 	}

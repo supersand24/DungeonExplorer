@@ -53,7 +53,7 @@ MonoBehaviour:
     type: 3}
   scoreOrbPrefab: {fileID: 461729986281102198, guid: 3f973291bc04e5d46ab3ecba5368fa8c,
     type: 3}
-  size: {x: 10, y: 10}
+  size: 10
   mapBorder: 0
   wallRemovalPercent: 35
   score: 0
