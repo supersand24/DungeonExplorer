@@ -14,5 +14,8 @@ public class PlayerController : MonoBehaviour
 		this.transform.position = new Vector2(startX + 0.5f, startY + 0.5f);
 		rigidBody = GetComponent<Rigidbody2D>();
 	}
-
+	public void Update(){
+		this.transform.position += new Vector3(Input.GetAxis("Horizontal") * playerInstance.speed * Time.deltaTime, Input.GetAxis("Vertical") * playerInstance.speed * Time.deltaTime, 0);
+		// update to give it a sprint function: speed=speed*2;
+	}
 }
