@@ -21,6 +21,9 @@ public class Enemy : MonoBehaviour
 	public void Generate(GameObject player, Map map) {
 		this.thePlayer = player;
 		this.currentCell = map.GetCell(map.RandomCoordinates);
+		while (currentCell.GetDistance(map.StartCoords) < 5) {
+			this.currentCell = map.GetCell(map.RandomCoordinates);
+		}
 		this.mapSize = map.size;
 		this.transform.position = new Vector2(currentCell.coords.x - (mapSize / 2) + 0.5f, currentCell.coords.y - (mapSize / 2) + 0.5f);
 		this.rigidBody = GetComponent<Rigidbody2D>();

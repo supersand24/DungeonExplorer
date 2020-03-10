@@ -17,7 +17,10 @@ public class PlayerController : MonoBehaviour
 		Debug.Log("Generating Player at " + this.transform.position);
 	}
 	public void Update(){
-		this.transform.position += new Vector3(Input.GetAxis("Horizontal") * this.speed * Time.deltaTime, Input.GetAxis("Vertical") * this.speed * Time.deltaTime, 0);
-		// update to give it a sprint function: speed=speed*2;
+		if (Input.GetKey("left shift")) {
+			this.transform.position += new Vector3(Input.GetAxis("Horizontal") * (this.speed * 2.0f) * Time.deltaTime, Input.GetAxis("Vertical") * (this.speed * 2.0f) * Time.deltaTime, 0);
+		} else {
+			this.transform.position += new Vector3(Input.GetAxis("Horizontal") * this.speed * Time.deltaTime, Input.GetAxis("Vertical") * this.speed * Time.deltaTime, 0);
+		}
 	}
 }

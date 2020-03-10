@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
 	private PlayerController playerInstance;
 	private Enemy enemyInstance;
 
-	private int score;
+	//private int score;
 	//private Time time;
 
 	private void BeginGame() {
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour {
 	private void Start() {
 		BeginGame();
 		//time = new Time();
-		score = 0;
+		//score = 0;
     }
 
     // Update is called once per frame
@@ -65,11 +65,13 @@ public class GameManager : MonoBehaviour {
 		}
 
 		//if (score != mapInstance.score) {
-		//	enemyInstance.Move3();
+		//	enemyInstance.Move1();
 		//	score = mapInstance.score;
 		//}
 
-		enemyInstance.Move4();
+		if (mapInstance.score > 5) {
+			enemyInstance.Move4();
+		}
 	}
 
 	
