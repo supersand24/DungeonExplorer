@@ -12,27 +12,29 @@ public class GameManager : MonoBehaviour {
 	private PlayerController playerInstance;
 	private Enemy enemyInstance;
 
-	//private int score;
-	//private Time time;
-
 	private void BeginGame() {
 		Physics2D.gravity = Vector2.zero;
 
+		//Create the map
 		mapInstance = Instantiate(mapPrefab) as Map;
 		mapInstance.name = "Map";
 		mapInstance.Generate();
 
+		//Create the player
 		playerInstance = Instantiate(playerPrefab) as PlayerController;
 		playerInstance.name = "Player";
 		playerInstance.Generate(mapInstance.StartCoords.x - (mapInstance.size / 2), mapInstance.StartCoords.y - (mapInstance.size / 2));
 
+		//Create the enemy
 		enemyInstance = Instantiate(enemyPrefab) as Enemy;
 		enemyInstance.name = "Enemy";
 		enemyInstance.Generate(playerInstance.gameObject, mapInstance);
 
+		//Resize the camera to fit map size
 		Camera.main.orthographicSize = (5 * (mapInstance.size/10f));
 	}
 
+	//Delete all elements and restart
 	private void NewMap() {
 		Debug.Log("------------------------");
 		StopAllCoroutines();
@@ -45,14 +47,11 @@ public class GameManager : MonoBehaviour {
 	// Start is called before the first frame update
 	private void Start() {
 		BeginGame();
-		//time = new Time();
-		//score = 0;
     }
 
     // Update is called once per frame
     private void Update() {
-		//temporary new map generation key
-		if (Input.GetKeyDown(KeyCode.R)) {
+		if (Input.GetKeyDown(KeyCode.R)) { //temporary new map generation key
 			NewMap();
 		}
 		
@@ -64,14 +63,11 @@ public class GameManager : MonoBehaviour {
 			NewMap();
 		}
 
-		//if (score != mapInstance.score) {
-		//	enemyInstance.Move1();
-		//	score = mapInstance.score;
-		//}
-
 		if (mapInstance.score > 5) {
 			enemyInstance.Move4();
 		}
+
+		ScoreUI.score = mapInstance.score;
 	}
 
 	
