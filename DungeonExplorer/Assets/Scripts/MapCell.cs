@@ -21,6 +21,10 @@ public class MapCell : MonoBehaviour {
 		return edges[(int)direction];
 	}
 
+	public float GetDistance(Vector2 tCoords) {
+		return Mathf.Sqrt((tCoords.x - this.coords.x) * (tCoords.x - this.coords.x) + (tCoords.y - this.coords.y) * (tCoords.y - this.coords.y));
+	}
+
 	//sets this cells edge in given direction to the given edge
 	public void SetEdge(MapDirection direction, MapCellEdge edge) {
 		edges[(int)direction] = edge;

@@ -7,12 +7,14 @@ public class PlayerController : MonoBehaviour
 {
 
 	public float speed;
+
 	//private BoxCollider2D collider;
 	private Rigidbody2D rigidBody;
 
 	public void Generate(float startX, float startY) {
 		this.transform.position = new Vector2(startX + 0.5f, startY + 0.5f);
 		rigidBody = GetComponent<Rigidbody2D>();
+		Debug.Log("Generating Player at " + this.transform.position);
 	}
 	public void Update(){
 		this.transform.position += new Vector3(Input.GetAxis("Horizontal") * this.speed * Time.deltaTime, Input.GetAxis("Vertical") * this.speed * Time.deltaTime, 0);

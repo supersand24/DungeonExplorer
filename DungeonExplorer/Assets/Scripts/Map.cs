@@ -28,8 +28,8 @@ public class Map : MonoBehaviour {
 	}
 
 	//returns the coords of the initial cell
-	public Vector2Int GetStartCoords() {
-		return startCoords;
+	public Vector2Int StartCoords {
+		get { return startCoords; }
 	}
 
 	//Returns random coords within the map's coord limits
