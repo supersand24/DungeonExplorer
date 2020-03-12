@@ -6,11 +6,13 @@ public class GameManager : MonoBehaviour {
 
 	public Map mapPrefab;
 	public PlayerController playerPrefab;
-	public Enemy enemyPrefab;
+	public GhostEnemy ghostEnemyPrefab;
+	public SkeletonEnemy skeletonEnemyPrefab;
 
 	private Map mapInstance;
 	private PlayerController playerInstance;
-	private Enemy enemyInstance;
+	private GhostEnemy ghostEnemyInstance;
+	private SkeletonEnemy skeletonEnemyInstance;
 
 	private void BeginGame() {
 		Physics2D.gravity = Vector2.zero;
@@ -25,10 +27,17 @@ public class GameManager : MonoBehaviour {
 		playerInstance.name = "Player";
 		playerInstance.Generate(mapInstance.StartCoords.x - (mapInstance.size / 2), mapInstance.StartCoords.y - (mapInstance.size / 2));
 
-		//Create the enemy
-		enemyInstance = Instantiate(enemyPrefab) as Enemy;
-		enemyInstance.name = "Enemy";
-		enemyInstance.Generate(playerInstance.gameObject, mapInstance);
+		//Create the ghost enemy
+		ghostEnemyInstance = Instantiate(ghostEnemyPrefab) as GhostEnemy;
+		ghostEnemyInstance.name = "GhostEnemy";
+		ghostEnemyInstance.Generate(playerInstance.gameObject, mapInstance);
+
+		//Create the skeleton enemy
+		skeletonEnemyInstance = Instantiate(skeletonEnemyPrefab) as SkeletonEnemy;
+		skeletonEnemyInstance.name = "GhostEnemy";
+		skeletonEnemyInstance.Generate(playerInstance.gameObject, mapInstance);
+		StartCoroutine(skeletonEnemyInstance.Move());
+		
 
 		//Resize the camera to fit map size
 		Camera.main.orthographicSize = (5 * (mapInstance.size/10f));
@@ -40,7 +49,8 @@ public class GameManager : MonoBehaviour {
 		StopAllCoroutines();
 		Destroy(mapInstance.gameObject);
 		Destroy(playerInstance.gameObject);
-		Destroy(enemyInstance.gameObject);
+		Destroy(ghostEnemyInstance.gameObject);
+		Destroy(skeletonEnemyInstance.gameObject);
 		BeginGame();
 	}
 
@@ -59,17 +69,15 @@ public class GameManager : MonoBehaviour {
 			NewMap();
 		}
 
-		if (enemyInstance.HitPlayer) {
-			NewMap();
+		if (ghostEnemyInstance.HitPlayer || skeletonEnemyInstance.HitPlayer) {
+			//NewMap();
 		}
 
 		if (mapInstance.score > 5) {
-			enemyInstance.Move4();
+			ghostEnemyInstance.Move();
 		}
 
 		ScoreUI.score = mapInstance.score;
 	}
-
-	
 
 }

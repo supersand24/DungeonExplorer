@@ -12,6 +12,8 @@ public enum MapDirection
 
 public static class MapDirections {
 
+	public static MapDirection[] directions = { (MapDirection)0, (MapDirection)1, (MapDirection)2, (MapDirection)3 };
+
 	public const int Count = 4;
 
 	//The vector a direction represents
